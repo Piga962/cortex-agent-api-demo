@@ -92,14 +92,15 @@ def agent_api_call(query: str, limit: int = 10):
 
                 try: 
                     if parsed['delta']['content'][0]['type'] == 'text': 
-                        text = parsed['delta']['content'][0]['text']
+                        text = parsed
                         yield text
      
                     elif parsed['delta']['content'][0]['type'] == 'tool_use': 
-                        text = parsed['delta']['content'][1]['tool_results']['content'][0]['json']['text']
-                        sql = parsed['delta']['content'][1]['tool_results']['content'][0]['json']['sql']
+                        # text = parsed['delta']['content'][1]['tool_results']['content'][0]['json']['text']
+                        # sql = parsed['delta']['content'][1]['tool_results']['content'][0]['json']['sql']
+                        text = parsed
                         yield text
-                        yield "\n\n `" + sql + "`" 
+                        # yield "\n\n `" + sql + "`" 
 
                     else: 
                         text = parsed
@@ -159,6 +160,8 @@ def main():
             with st.spinner("Processing your request..."):
                 
                 response = agent_api_call(user_input, 1)
+                for response in response:
+                    print(response)
                 text = st.write(response)
 
                 # Add assistant response to chat
